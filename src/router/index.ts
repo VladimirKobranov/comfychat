@@ -1,6 +1,7 @@
 import HomePage from '@/pages/HomePage.vue'
 import LoginPage from '@/pages/LoginPage.vue'
 import ProfilePage from '@/pages/dashboard/ProfilePage.vue'
+import SignupPage from '@/pages/SignupPage.vue'
 import { useAuthStore } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardPage from '@/pages/dashboard/DashboardPage.vue'
@@ -17,6 +18,10 @@ const router = createRouter({
       component: LoginPage,
     },
     {
+      path: '/signup',
+      component: SignupPage,
+    },
+    {
       path: '/dashboard',
       meta: { requiresAuth: true },
       children: [
@@ -27,9 +32,12 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   if (to.meta.requiresAuth) {
     const auth = useAuthStore()
+    if (!auth.ready) {
+      await auth.init()
+    }
     if (!auth.isAuthenticated) {
       return { path: '/login', query: { redirect: to.fullPath } }
     }

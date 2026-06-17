@@ -16,23 +16,33 @@ const data = ref<FormData>({
   password: '',
 })
 
-function handleLogin() {
-  auth.login(data.value.email, data.value.password)
-  const redirect = (route.query.redirect as string) || '/'
-  router.push(redirect)
+const error = ref('')
+const loading = ref(false)
+
+async function handleLogin() {
+  error.value = ''
+  loading.value = true
+  try {
+    await auth.login(data.value.email, data.value.password)
+    const redirect = (route.query.redirect as string) || '/'
+    router.push(redirect)
+  } catch (e: unknown) {
+    error.value = (e as { message?: string }).message ?? 'Login failed'
+  } finally {
+    loading.value = false
+  }
 }
 </script>
 
 <template>
-  <form class="form">
-    <h4>Form:</h4>
-    <input v-model="data.email" type="email" />
-    <input v-model="data.password" type="password" />
+  <form class="form" @submit.prevent="handleLogin">
+    <h4>Sign in</h4>
+    <p v-if="error" class="error">{{ error }}</p>
+    <input v-model="data.email" type="email" placeholder="Email" required />
+    <input v-model="data.password" type="password" placeholder="Password" required />
+    <button :disabled="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
+    <p>Don't have an account? <RouterLink to="/signup">Sign up</RouterLink></p>
   </form>
-
-  <div>
-    <button @click="handleLogin">login</button>
-  </div>
 </template>
 
 <style lang="scss">
@@ -40,5 +50,10 @@ function handleLogin() {
 
 .form {
   @extend %gap, %column-layout;
+}
+
+.error {
+  color: #e00;
+  margin: 0;
 }
 </style>

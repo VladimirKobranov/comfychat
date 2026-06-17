@@ -1,37 +1,55 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import router from '@/router'
-
-interface user {
-  name: string
-  email: string
-  token: string
-  role: string
-  _id: number
-}
+import { supabase } from '@/utils/supabase'
+import type { User } from '@supabase/supabase-js'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<user | null>(null)
+  const user = ref<Pick<User, 'id' | 'email' | 'user_metadata' | 'app_metadata'> | null>(null)
+  const ready = ref(false)
 
   const isAuthenticated = computed(() => user.value !== null)
 
-  async function login(email: string, password: string) {
-    console.log('::auth:: ', email, password)
-    await new Promise((resolve) => setTimeout(resolve, 500))
+  let authListener: { subscription: { unsubscribe: () => void } } | null = null
 
-    user.value = {
-      name: 'John Doe',
-      email: email,
-      token: 'fake-token-' + Math.random().toString(36),
-      role: 'user',
-      _id: 1,
+  async function init() {
+    if (ready.value) return
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    syncUser(session?.user ?? null)
+    ready.value = true
+
+    authListener = supabase.auth.onAuthStateChange((_event, session) => {
+      syncUser(session?.user ?? null)
+    }).data
+  }
+
+  function syncUser(supabaseUser: User | null) {
+    if (supabaseUser) {
+      user.value = {
+        id: supabaseUser.id,
+        email: supabaseUser.email ?? '',
+        user_metadata: supabaseUser.user_metadata,
+        app_metadata: supabaseUser.app_metadata,
+      }
+    } else {
+      user.value = null
     }
   }
 
-  async function logout() {
-    user.value = null
-    await router.push('/')
+  async function login(email: string, password: string) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
   }
 
-  return { user, isAuthenticated, login, logout }
+  async function logout() {
+    await supabase.auth.signOut()
+    authListener?.subscription.unsubscribe()
+  }
+
+  function cleanup() {
+    authListener?.subscription.unsubscribe()
+  }
+
+  return { user, isAuthenticated, ready, init, login, logout, cleanup }
 })

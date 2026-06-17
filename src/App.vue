@@ -3,10 +3,11 @@ import { onMounted } from 'vue'
 import { useStores } from '@/stores'
 import NavigationPanelComponent from './components/NavigationPanelComponent.vue'
 
-const { app } = useStores()
+const { app, auth } = useStores()
 
 onMounted(() => {
   app.init()
+  auth.init()
 })
 </script>
 
