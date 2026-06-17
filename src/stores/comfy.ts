@@ -1,5 +1,8 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { supabase } from '@/utils/supabase'
+import { useAuthStore } from '@/stores/auth'
+import { useGenerationsStore } from '@/stores/generations'
 import { comfyDefaults } from '@/configs/comfy'
 
 const COMFY_HOST = 'http://127.0.0.1:8188'
@@ -45,7 +48,16 @@ export const useComfyStore = defineStore('comfy', () => {
     imageUrl.value = ''
     error.value = ''
 
+    const auth = useAuthStore()
+    const userId = auth.user?.id
+    if (!userId) {
+      error.value = 'Not authenticated'
+      status.value = 'error'
+      return
+    }
+
     const clientId = crypto.randomUUID()
+    const finalSeed = seed ?? Math.floor(Math.random() * 2 ** 32)
 
     const workflow = {
       prompt: {
@@ -56,7 +68,7 @@ export const useComfyStore = defineStore('comfy', () => {
         '3': {
           class_type: 'KSampler',
           inputs: {
-            seed: seed ?? Math.floor(Math.random() * 2 ** 32),
+            seed: finalSeed,
             steps,
             cfg,
             sampler_name,
@@ -81,13 +93,76 @@ export const useComfyStore = defineStore('comfy', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(workflow),
       })
-      const data = (await res.json()) as { prompt_id: string }
+      const { prompt_id } = (await res.json()) as { prompt_id: string }
       status.value = 'generating'
-      connectWs(clientId, data.prompt_id)
+      connectWs(clientId, prompt_id)
+
+      await supabase.from('generations').insert({
+        user_id: userId,
+        model,
+        positive,
+        negative,
+        width,
+        height,
+        batch_size,
+        steps,
+        cfg,
+        sampler_name,
+        scheduler,
+        denoise,
+        seed: finalSeed,
+        status: 'pending',
+        prompt_id,
+      })
     } catch (e) {
       error.value = (e as Error).message
       status.value = 'error'
+
+      await supabase.from('generations').insert({
+        user_id: userId,
+        model,
+        positive,
+        negative,
+        width,
+        height,
+        batch_size,
+        steps,
+        cfg,
+        sampler_name,
+        scheduler,
+        denoise,
+        seed: finalSeed ?? null,
+        status: 'failed',
+        error: error.value,
+      })
     }
+  }
+
+  async function saveSuccess(promptId: string, filename: string, subfolder: string) {
+    const { data } = await supabase
+      .from('generations')
+      .update({
+        status: 'completed',
+        image_filename: filename,
+        image_subfolder: subfolder,
+      })
+      .eq('prompt_id', promptId)
+      .select()
+    if (data?.length) {
+      const gens = useGenerationsStore()
+      const i = gens.generations.findIndex((g) => g.prompt_id === promptId)
+      if (i !== -1) gens.generations[i] = { ...gens.generations[i], ...data[0] }
+    }
+  }
+
+  async function saveFail(promptId: string, msg: string) {
+    await supabase
+      .from('generations')
+      .update({
+        status: 'failed',
+        error: msg,
+      })
+      .eq('prompt_id', promptId)
   }
 
   function connectWs(clientId: string, promptId: string) {
@@ -120,6 +195,7 @@ export const useComfyStore = defineStore('comfy', () => {
           const img = data.output?.images?.[0]
           if (img) {
             imageUrl.value = `${COMFY_HOST}/view?filename=${encodeURIComponent(img.filename)}&subfolder=${encodeURIComponent(img.subfolder)}&type=${img.type}`
+            void saveSuccess(promptId, img.filename, img.subfolder)
           }
           status.value = 'done'
           break
@@ -130,6 +206,7 @@ export const useComfyStore = defineStore('comfy', () => {
     ws.onerror = () => {
       error.value = 'WebSocket error'
       status.value = 'error'
+      void saveFail(promptId, 'WebSocket error')
     }
 
     ws.onclose = () => {

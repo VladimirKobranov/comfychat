@@ -1,7 +1,8 @@
 export const positivePrompt = `
-masterpiece, best quality, ultra-detailed, 8k, photorealistic oil painting, cinematic lighting, soft focus,
+masterpiece, best quality, ultra-detailed, 8k, photorealistic oil painting, cinematic lighting, soft focus,big breasts,  open neckline, open breasts,
 1girl, solo, blonde wavy short hair, messy hair, floating hair, looking up, blue eyes, soft gaze, parted lips, pale skin, delicate facial features, **simple white long-sleeve top, fully covered shoulders, high neckline, modest clothing**, gold necklace with green gem pendant, upper body shot,
 background of cosmic space, giant glowing planet with clouds, bright light beam from planet, starry sky, bokeh, dreamy atmosphere, soft light, ethereal, fantasy aesthetic, depth of field, painterly details, smooth skin texture
+
 `
 
 export const negativePrompt = `

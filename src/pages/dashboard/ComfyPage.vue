@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { reactive } from "vue";
-import { useComfyStore } from "@/stores/comfy";
-import { comfyDefaults } from "@/configs/comfy";
+import { reactive } from 'vue'
+import { useComfyStore } from '@/stores/comfy'
+import { comfyDefaults } from '@/configs/comfy'
 
-const comfy = useComfyStore();
+const comfy = useComfyStore()
 
 const params = reactive({
   positive: comfyDefaults.positive,
@@ -16,22 +16,22 @@ const params = reactive({
   seed: null as number | null,
   sampler_name: comfyDefaults.sampler_name,
   scheduler: comfyDefaults.scheduler,
-});
+})
 
 function handleGenerate() {
-  const seed = params.seed != null && !Number.isNaN(params.seed) ? params.seed : undefined;
-  comfy.generate({ ...params, seed });
+  const seed = params.seed != null && !Number.isNaN(params.seed) ? params.seed : undefined
+  comfy.generate({ ...params, seed })
 }
 
 function download(url: string) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "";
-  a.click();
+  const a = document.createElement('a')
+  a.href = url
+  a.download = ''
+  a.click()
 }
 
-function openImage() {
-  window.open(comfy.imageUrl, "_blank");
+function openImage(url: string) {
+  window.open(url, '_blank')
 }
 </script>
 
@@ -84,7 +84,7 @@ function openImage() {
         @click="handleGenerate"
       >
         {{
-          comfy.status === "generating" || comfy.status === "queued" ? "Generating..." : "Generate"
+          comfy.status === 'generating' || comfy.status === 'queued' ? 'Generating...' : 'Generate'
         }}
       </button>
     </div>
@@ -98,7 +98,7 @@ function openImage() {
     <div v-if="comfy.imageUrl" class="result">
       <img :src="comfy.imageUrl" alt="generated" />
       <div class="actions">
-        <button @click="openImage">Open full size</button>
+        <button @click="openImage(comfy.imageUrl)">Open full size</button>
         <button @click="download(comfy.imageUrl)">Download</button>
         <button @click="comfy.reset">Clear result</button>
       </div>

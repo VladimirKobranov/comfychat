@@ -3,6 +3,7 @@ import LoginPage from '@/pages/LoginPage.vue'
 import ProfilePage from '@/pages/dashboard/ProfilePage.vue'
 import SignupPage from '@/pages/SignupPage.vue'
 import ComfyPage from '@/pages/dashboard/ComfyPage.vue'
+import GenerationsPage from '@/pages/dashboard/GenerationsPage.vue'
 import { useAuthStore } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
 import DashboardPage from '@/pages/dashboard/DashboardPage.vue'
@@ -28,6 +29,7 @@ const router = createRouter({
       children: [
         { path: 'profile', component: ProfilePage },
         { path: 'comfy', component: ComfyPage },
+        { path: 'generations', component: GenerationsPage },
         { path: '', component: DashboardPage },
       ],
     },
