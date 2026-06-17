@@ -14,6 +14,7 @@ const handleLogout = () => {
     <ButtonLink to="/" text="Home" />
     <ButtonLink v-if="!auth.isAuthenticated" to="/login" text="Login" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard" text="Dashboard" />
+    <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/comfy" text="Comfy" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/profile" text="Profile" />
     <button v-if="auth.isAuthenticated" @click="handleLogout">Logout</button>
   </div>
