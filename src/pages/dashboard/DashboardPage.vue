@@ -26,8 +26,21 @@ async function submit() {
 }
 
 async function deleteRow(note_id: Note["id"]) {
-  //asd
   await notesStore.deleteNote(note_id);
+}
+
+const editId = ref<Note["id"] | null>(null);
+const editContent = ref("");
+
+function enableEdit(note: Note) {
+  editId.value = note.id;
+  editContent.value = note.content ?? "";
+}
+
+async function saveEdit() {
+  if (editId.value === null) return;
+  await notesStore.updateNote(editId.value, editContent.value);
+  editId.value = null;
 }
 
 watchEffect(() => {
@@ -43,6 +56,7 @@ watchEffect(() => {
           <th>id</th>
           <th>created_at</th>
           <th>content</th>
+          <th>update</th>
           <th>delete</th>
         </tr>
       </thead>
@@ -51,6 +65,14 @@ watchEffect(() => {
           <td>{{ note.id }}</td>
           <td>{{ formatDate(note.created_at) }}</td>
           <td>{{ note.content }}</td>
+          <td>
+            <template v-if="editId === note.id">
+              <input v-model="editContent" />
+              <button @click="saveEdit">save</button>
+              <button @click="editId = null">cancel</button>
+            </template>
+            <button v-else @click="enableEdit(note)">update</button>
+          </td>
           <td><button @click="deleteRow(note.id)">delete</button></td>
         </tr>
       </tbody>
