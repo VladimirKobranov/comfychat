@@ -1,51 +1,51 @@
 <script setup lang="ts">
-import { watchEffect, ref } from "vue";
-import { storeToRefs } from "pinia";
-import { useStores } from "@/stores";
-import { useNotesStore } from "@/stores/notes";
-import { formatDate } from "@/utils/utils";
+import { watchEffect, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useStores } from '@/stores'
+import { useNotesStore } from '@/stores/notes'
+import { formatDate } from '@/utils/utils'
 
-import type { Note } from "@/stores/notes";
+import type { Note } from '@/stores/notes'
 
-const { auth } = useStores();
-const notesStore = useNotesStore();
-const { notes } = storeToRefs(notesStore);
+const { auth } = useStores()
+const notesStore = useNotesStore()
+const { notes } = storeToRefs(notesStore)
 
-const isForm = ref(false);
-const content = ref("");
+const isForm = ref(false)
+const content = ref('')
 
 function enableForm() {
-  isForm.value = true;
+  isForm.value = true
 }
 
 async function submit() {
-  if (!content.value.trim()) return;
-  await notesStore.createNote(content.value);
-  content.value = "";
-  isForm.value = false;
+  if (!content.value.trim()) return
+  await notesStore.createNote(content.value)
+  content.value = ''
+  isForm.value = false
 }
 
-async function deleteRow(note_id: Note["id"]) {
-  await notesStore.deleteNote(note_id);
+async function deleteRow(note_id: Note['id']) {
+  await notesStore.deleteNote(note_id)
 }
 
-const editId = ref<Note["id"] | null>(null);
-const editContent = ref("");
+const editId = ref<Note['id'] | null>(null)
+const editContent = ref('')
 
 function enableEdit(note: Note) {
-  editId.value = note.id;
-  editContent.value = note.content ?? "";
+  editId.value = note.id
+  editContent.value = note.content ?? ''
 }
 
 async function saveEdit() {
-  if (editId.value === null) return;
-  await notesStore.updateNote(editId.value, editContent.value);
-  editId.value = null;
+  if (editId.value === null) return
+  await notesStore.updateNote(editId.value, editContent.value)
+  editId.value = null
 }
 
 watchEffect(() => {
-  if (auth.isAuthenticated) notesStore.getNotes();
-});
+  if (auth.isAuthenticated) notesStore.getNotes()
+})
 </script>
 
 <template>

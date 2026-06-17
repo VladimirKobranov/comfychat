@@ -4,7 +4,10 @@ import { supabase } from '@/utils/supabase'
 import type { User } from '@supabase/supabase-js'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<Pick<User, 'id' | 'email' | 'user_metadata' | 'app_metadata'> | null>(null)
+  const user = ref<Pick<
+    User,
+    'id' | 'email' | 'user_metadata' | 'app_metadata' | 'created_at' | 'last_sign_in_at'
+  > | null>(null)
   const ready = ref(false)
 
   const isAuthenticated = computed(() => user.value !== null)
@@ -31,6 +34,8 @@ export const useAuthStore = defineStore('auth', () => {
         email: supabaseUser.email ?? '',
         user_metadata: supabaseUser.user_metadata,
         app_metadata: supabaseUser.app_metadata,
+        created_at: supabaseUser.created_at,
+        last_sign_in_at: supabaseUser.last_sign_in_at,
       }
     } else {
       user.value = null

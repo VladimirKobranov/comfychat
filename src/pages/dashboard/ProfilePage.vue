@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { useStores } from '@/stores'
+import { formatDate } from '@/utils/utils'
 
 const { auth } = useStores()
 </script>
 
 <template>
-  <h4>profile page</h4>
-  <div>
-    <span>id:</span>
-    <span>{{ auth.user?.id }}</span>
-  </div>
-  <div class="panel">
-    <span>email:</span>
-    <span>{{ auth.user?.email }}</span>
+  <h4>Profile</h4>
+  <div>id: {{ auth.user?.id }}</div>
+  <div>email: {{ auth.user?.email }}</div>
+  <div v-if="auth.user?.created_at">registered: {{ formatDate(auth.user.created_at) }}</div>
+  <div v-if="auth.user?.last_sign_in_at">
+    last login: {{ formatDate(auth.user.last_sign_in_at) }}
   </div>
 </template>
