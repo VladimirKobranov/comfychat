@@ -1,0 +1,16 @@
+%gap {
+  gap: 6px;
+  margin: 6px;
+}
+
+%column-layout {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+%row-layout {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
