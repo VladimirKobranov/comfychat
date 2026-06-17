@@ -24,5 +24,9 @@ export const useNotesStore = defineStore('notes', () => {
     if (data) notes.value = [...notes.value, ...data]
   }
 
-  return { notes, getNotes, createNote }
+  async function deleteNote(note_id: Note['id']) {
+    await supabase.from('notes').delete().eq('id', note_id)
+    notes.value = notes.value.filter((n) => n.id !== note_id)
+  }
+  return { notes, getNotes, createNote, deleteNote }
 })

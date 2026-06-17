@@ -1,31 +1,38 @@
 <script setup lang="ts">
-import { watchEffect, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useStores } from '@/stores'
-import { useNotesStore } from '@/stores/notes'
-import { formatDate } from '@/utils/utils'
+import { watchEffect, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useStores } from "@/stores";
+import { useNotesStore } from "@/stores/notes";
+import { formatDate } from "@/utils/utils";
 
-const { auth } = useStores()
-const notesStore = useNotesStore()
-const { notes } = storeToRefs(notesStore)
+import type { Note } from "@/stores/notes";
 
-const isForm = ref(false)
-const content = ref('')
+const { auth } = useStores();
+const notesStore = useNotesStore();
+const { notes } = storeToRefs(notesStore);
+
+const isForm = ref(false);
+const content = ref("");
 
 function enableForm() {
-  isForm.value = true
+  isForm.value = true;
 }
 
 async function submit() {
-  if (!content.value.trim()) return
-  await notesStore.createNote(content.value)
-  content.value = ''
-  isForm.value = false
+  if (!content.value.trim()) return;
+  await notesStore.createNote(content.value);
+  content.value = "";
+  isForm.value = false;
+}
+
+async function deleteRow(note_id: Note["id"]) {
+  //asd
+  await notesStore.deleteNote(note_id);
 }
 
 watchEffect(() => {
-  if (auth.isAuthenticated) notesStore.getNotes()
-})
+  if (auth.isAuthenticated) notesStore.getNotes();
+});
 </script>
 
 <template>
@@ -36,6 +43,7 @@ watchEffect(() => {
           <th>id</th>
           <th>created_at</th>
           <th>content</th>
+          <th>delete</th>
         </tr>
       </thead>
       <tbody>
@@ -43,6 +51,7 @@ watchEffect(() => {
           <td>{{ note.id }}</td>
           <td>{{ formatDate(note.created_at) }}</td>
           <td>{{ note.content }}</td>
+          <td><button @click="deleteRow(note.id)">delete</button></td>
         </tr>
       </tbody>
     </table>
