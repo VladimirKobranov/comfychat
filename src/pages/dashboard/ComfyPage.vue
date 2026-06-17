@@ -1,69 +1,63 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useComfyStore } from '@/stores/comfy'
-import { comfyDefaults } from '@/configs/comfy'
+import { reactive } from "vue";
+import { useComfyStore } from "@/stores/comfy";
+import { comfyDefaults } from "@/configs/comfy";
 
-const comfy = useComfyStore()
+const comfy = useComfyStore();
 
-const positive = ref(comfyDefaults.positive)
-const negative = ref(comfyDefaults.negative)
-const steps = ref(comfyDefaults.steps)
-const cfg = ref(comfyDefaults.cfg)
-const denoise = ref(comfyDefaults.denoise)
-const width = ref(comfyDefaults.width)
-const height = ref(comfyDefaults.height)
-const seed = ref<number | null>(null)
-const samplerName = ref(comfyDefaults.sampler_name)
-const scheduler = ref(comfyDefaults.scheduler)
+const params = reactive({
+  positive: comfyDefaults.positive,
+  negative: comfyDefaults.negative,
+  steps: comfyDefaults.steps,
+  cfg: comfyDefaults.cfg,
+  denoise: comfyDefaults.denoise,
+  width: comfyDefaults.width,
+  height: comfyDefaults.height,
+  seed: null as number | null,
+  sampler_name: comfyDefaults.sampler_name,
+  scheduler: comfyDefaults.scheduler,
+});
 
 function handleGenerate() {
-  comfy.generate({
-    positive: positive.value,
-    negative: negative.value,
-    steps: steps.value,
-    cfg: cfg.value,
-    denoise: denoise.value,
-    width: width.value,
-    height: height.value,
-    seed: seed.value ?? undefined,
-    sampler_name: samplerName.value,
-    scheduler: scheduler.value,
-  })
+  const seed = params.seed != null && !Number.isNaN(params.seed) ? params.seed : undefined;
+  comfy.generate({ ...params, seed });
 }
 
 function download(url: string) {
-  const a = document.createElement('a')
-  a.href = url
-  a.download = ''
-  a.click()
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "";
+  a.click();
 }
 
 function openImage() {
-  window.open(comfy.imageUrl, '_blank')
+  window.open(comfy.imageUrl, "_blank");
 }
 </script>
 
 <template>
   <div>
-    <textarea v-model="positive" placeholder="Positive prompt" rows="3" />
-    <textarea v-model="negative" placeholder="Negative prompt" rows="2" />
+    <textarea v-model="params.positive" placeholder="Positive prompt" rows="3" id="positive" />
+    <textarea v-model="params.negative" placeholder="Negative prompt" rows="2" id="negative" />
 
     <div class="params">
-      <label>Steps <input v-model.number="steps" type="number" min="1" max="150" /></label>
-      <label>CFG <input v-model.number="cfg" type="number" min="1" max="30" step="0.5" /></label>
+      <label>Steps <input v-model.number="params.steps" type="number" min="1" max="150" /></label>
       <label
-        >Denoise <input v-model.number="denoise" type="number" min="0" max="1" step="0.05"
+        >CFG <input v-model.number="params.cfg" type="number" min="1" max="30" step="0.5"
       /></label>
       <label
-        >Width <input v-model.number="width" type="number" min="64" max="2048" step="64"
+        >Denoise <input v-model.number="params.denoise" type="number" min="0" max="1" step="0.05"
       /></label>
       <label
-        >Height <input v-model.number="height" type="number" min="64" max="2048" step="64"
+        >Width <input v-model.number="params.width" type="number" min="64" max="2048" step="64"
       /></label>
-      <label>Seed <input v-model.number="seed" type="number" placeholder="random" /></label>
+      <label
+        >Height <input v-model.number="params.height" type="number" min="64" max="2048" step="64"
+      /></label>
+      <label>Seed <input v-model.number="params.seed" type="number" placeholder="random" /></label>
       <label>
         Sampler
-        <select v-model="samplerName">
+        <select v-model="params.sampler_name">
           <option>euler</option>
           <option>euler_ancestral</option>
           <option>heun</option>
@@ -74,7 +68,7 @@ function openImage() {
       </label>
       <label>
         Scheduler
-        <select v-model="scheduler">
+        <select v-model="params.scheduler">
           <option>normal</option>
           <option>karras</option>
           <option>exponential</option>
@@ -84,13 +78,13 @@ function openImage() {
       </label>
     </div>
 
-    <div>
+    <div class="actions">
       <button
         :disabled="comfy.status === 'generating' || comfy.status === 'queued'"
         @click="handleGenerate"
       >
         {{
-          comfy.status === 'generating' || comfy.status === 'queued' ? 'Generating...' : 'Generate'
+          comfy.status === "generating" || comfy.status === "queued" ? "Generating..." : "Generate"
         }}
       </button>
     </div>
@@ -106,6 +100,7 @@ function openImage() {
       <div class="actions">
         <button @click="openImage">Open full size</button>
         <button @click="download(comfy.imageUrl)">Download</button>
+        <button @click="comfy.reset">Clear result</button>
       </div>
     </div>
   </div>
@@ -116,26 +111,32 @@ function openImage() {
   color: #e00;
 }
 textarea {
-  display: block;
-  width: 400px;
-  margin-bottom: 8px;
+  display: flex;
+  min-width: 400px;
+  width: 100%;
+  margin: 6px;
 }
 img {
   max-width: 512px;
   margin-top: 12px;
 }
-.params {
+.actions {
+  width: auto;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 0;
+  justify-content: center;
+}
+
+.params {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 6px;
+  margin: 6px;
   label {
     font-size: 0.85em;
   }
   input,
   select {
     display: block;
-    margin-top: 2px;
     width: 110px;
   }
 }
