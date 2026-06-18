@@ -68,17 +68,31 @@ async function changeEmail() {
 
 <template>
   <div class="page">
-    <section>
-      <h4>Account</h4>
-      <div class="field-row">
-        <span class="label">id</span>
-        <span>{{ auth.user?.id }}</span>
-      </div>
-      <div class="field-row">
-        <span class="label">email</span>
-        <span>{{ auth.user?.email }}</span>
-        <button v-if="!showEmailForm" @click="showEmailForm = true">change</button>
-      </div>
+    <h2>Account</h2>
+    <div class="card">
+      <dl>
+        <div class="field-row">
+          <dt>ID</dt>
+          <dd>
+            <b class="mono">{{ auth.user?.id }}</b>
+          </dd>
+        </div>
+        <div class="field-row">
+          <dt>Email</dt>
+          <dd>{{ auth.user?.email }}</dd>
+        </div>
+      </dl>
+      <dl>
+        <div class="field-row" v-if="auth.user?.created_at">
+          <dt>Registered</dt>
+          <dd>{{ formatDate(auth.user.created_at) }}</dd>
+        </div>
+        <div class="field-row" v-if="auth.user?.last_sign_in_at">
+          <dt>Last login</dt>
+          <dd>{{ formatDate(auth.user.last_sign_in_at) }}</dd>
+        </div>
+      </dl>
+      <button v-if="!showEmailForm" @click="showEmailForm = true">change email</button>
       <form v-if="showEmailForm" class="form" @submit.prevent="changeEmail">
         <input v-model="newEmail" type="email" placeholder="new email" />
         <div class="row">
@@ -86,37 +100,31 @@ async function changeEmail() {
           <button type="button" @click="showEmailForm = false">cancel</button>
         </div>
       </form>
-      <div v-if="auth.user?.created_at" class="field-row">
-        <span class="label">registered</span>
-        <span>{{ formatDate(auth.user.created_at) }}</span>
-      </div>
-      <div v-if="auth.user?.last_sign_in_at" class="field-row">
-        <span class="label">last login</span>
-        <span>{{ formatDate(auth.user.last_sign_in_at) }}</span>
-      </div>
-    </section>
+    </div>
 
-    <section>
-      <h4>Profile</h4>
-      <div v-if="!showForm" class="column">
-        <div class="field-row">
-          <span class="label">full name</span>
-          <span>{{ auth.user?.user_metadata?.full_name ?? '—' }}</span>
-        </div>
-        <div class="field-row">
-          <span class="label">display name</span>
-          <span>{{ auth.user?.user_metadata?.display_name ?? '—' }}</span>
-        </div>
-        <div class="field-row">
-          <span class="label">bio</span>
-          <span>{{ auth.user?.user_metadata?.bio ?? '—' }}</span>
-        </div>
-        <button @click="openForm">edit</button>
-      </div>
+    <h2>Profile</h2>
+    <div class="card">
+      <template v-if="!showForm">
+        <dl>
+          <div class="field-row">
+            <dt>Full name</dt>
+            <dd>{{ auth.user?.user_metadata?.full_name || '—' }}</dd>
+          </div>
+          <div class="field-row">
+            <dt>Display name</dt>
+            <dd>{{ auth.user?.user_metadata?.display_name || '—' }}</dd>
+          </div>
+          <div class="field-row">
+            <dt>Bio</dt>
+            <dd>{{ auth.user?.user_metadata?.bio || '—' }}</dd>
+          </div>
+        </dl>
+        <button @click="openForm">edit profile</button>
+      </template>
       <form v-else class="form" @submit.prevent="save">
-        <label>full name <input v-model="fields.full_name" /></label>
-        <label>display name <input v-model="fields.display_name" /></label>
-        <label>bio <textarea v-model="fields.bio" rows="3" /></label>
+        <label>Full name <input v-model="fields.full_name" /></label>
+        <label>Display name <input v-model="fields.display_name" /></label>
+        <label>Bio <textarea v-model="fields.bio" rows="3" /></label>
         <div class="row">
           <button type="submit" :disabled="saving">save</button>
           <button type="button" @click="cancelForm">cancel</button>
@@ -124,7 +132,7 @@ async function changeEmail() {
         <p v-if="done">saved</p>
         <p v-if="error" class="error">{{ error }}</p>
       </form>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -137,10 +145,19 @@ async function changeEmail() {
   max-width: 480px;
 }
 
-.section {
-  @extend %column-layout;
-  @extend %gap;
-  @extend %border;
+.card {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.card > * + * {
+  margin-top: 8px;
+}
+
+dl {
+  margin: 0;
 }
 
 .field-row {
@@ -149,9 +166,20 @@ async function changeEmail() {
   align-items: baseline;
 }
 
-.label {
+dt {
   min-width: 100px;
   color: #666;
+  font-size: 0.85em;
+  text-align: justify;
+}
+
+dd {
+  margin: 0;
+  word-break: break-all;
+}
+
+.mono {
+  font-size: 0.8em;
 }
 
 .form {
@@ -166,6 +194,7 @@ async function changeEmail() {
   input,
   textarea {
     width: 100%;
+    box-sizing: border-box;
   }
 }
 
