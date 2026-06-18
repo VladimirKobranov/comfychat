@@ -13,6 +13,7 @@ const handleLogout = () => {
   <div class="panel">
     <ButtonLink to="/" text="Home" />
     <ButtonLink v-if="!auth.isAuthenticated" to="/login" text="Login" />
+    <ButtonLink v-if="!auth.isAuthenticated" to="/signup" text="Signup" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/notes" text="Notes" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/chat" text="Chat" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/comfy" text="Comfy" />
