@@ -1,36 +1,36 @@
 <script setup lang="ts">
-import { watchEffect } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useStores } from '@/stores'
-import { useGenerationsStore } from '@/stores/generations'
-import { formatDate } from '@/utils/utils'
+import { watchEffect } from "vue";
+import { storeToRefs } from "pinia";
+import { useStores } from "@/stores";
+import { useGenerationsStore } from "@/stores/generations";
+import { formatDate } from "@/utils/utils";
 
-import type { Generation } from '@/stores/generations'
+import type { Generation } from "@/stores/generations";
 
-const { auth } = useStores()
-const gensStore = useGenerationsStore()
-const { generations } = storeToRefs(gensStore)
+const { auth } = useStores();
+const gensStore = useGenerationsStore();
+const { generations } = storeToRefs(gensStore);
 
 function imageUrl(gen: Generation) {
-  if (gen.image_storage_path) return gen.image_storage_path
-  if (!gen.image_filename) return ''
-  return `http://127.0.0.1:8188/view?filename=${encodeURIComponent(gen.image_filename)}&subfolder=${encodeURIComponent(gen.image_subfolder ?? '')}&type=output`
+  if (gen.image_storage_path) return gen.image_storage_path;
+  if (!gen.image_filename) return "";
+  return `http://127.0.0.1:8188/view?filename=${encodeURIComponent(gen.image_filename)}&subfolder=${encodeURIComponent(gen.image_subfolder ?? "")}&type=output`;
 }
 
 function openImage(url: string) {
-  window.open(url, '_blank')
+  window.open(url, "_blank");
 }
 
 function download(url: string) {
-  const a = document.createElement('a')
-  a.href = url
-  a.download = ''
-  a.click()
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "";
+  a.click();
 }
 
 watchEffect(() => {
-  if (auth.isAuthenticated) gensStore.getGenerations()
-})
+  if (auth.isAuthenticated) gensStore.getGenerations();
+});
 </script>
 
 <template>
@@ -70,7 +70,7 @@ watchEffect(() => {
                 <div>{{ gen.negative }}</div>
               </div>
               <div v-if="gen.error"><small>error</small> {{ gen.error }}</div>
-              <div class="mono">{{ gen.prompt_id?.slice(0, 12) }}…</div>
+              <b>{{ gen.prompt_id }}</b>
             </div>
           </details>
         </div>
@@ -86,56 +86,50 @@ watchEffect(() => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/styles/mixins";
+
 .grid {
   display: grid;
   grid-template-columns: auto auto auto;
-  gap: 6px;
-  padding: 6px;
+  @extend %gap;
 }
 .card {
-  border: 1px solid #000000;
+  @extend %border;
   overflow: hidden;
   min-width: 300px;
 }
 .card-img {
-  padding: 6px;
+  @extend %gap;
 }
 .card-img img {
   max-width: 100%;
   max-height: 160px;
   object-fit: contain;
-  display: flex;
-  justify-self: center;
+  display: block;
+  margin: 0 auto;
 }
 .card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 6px;
+  @extend %column-layout;
+  @extend %gap;
 }
 .card-footer {
-  display: flex;
-  gap: 4px;
-  padding: 6px;
+  @extend %row-layout, %gap;
   border-top: 1px solid #000;
   justify-content: center;
 }
 .row {
-  display: flex;
-  gap: 6px;
+  @extend %row-layout;
+  @extend %gap;
   align-items: center;
 }
 details {
   .details-body {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    padding-top: 4px;
+    @extend %column-layout, %gap;
+
     .params {
-      display: flex;
+      @extend %row-layout, %gap;
       flex-wrap: wrap;
-      gap: 6px;
     }
   }
 }
