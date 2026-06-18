@@ -98,3 +98,35 @@ The dev server proxies `/api/chat` → `http://127.0.0.1:8080/v1/chat/completion
 # Terminal 3: this project
 vp dev
 ```
+
+## Screenshots
+
+### Screenshot 1
+
+![Screenshot 1](./pics/pic_1.png)
+
+_Description:_ AI assisted prompt for comfy ui
+
+---
+
+### Screenshot 2
+
+![Screenshot 2](./pics/pic_2.png)
+
+_Description:_ Comfyui prompt page
+
+---
+
+### Screenshot 3
+
+![Screenshot 3](./pics/pic_3.png)
+
+_Description:_ Your waifu generations
+
+---
+
+### Screenshot 4
+
+![Screenshot 4](./pics/pic_4.png)
+
+_Description:_ Some extra notes

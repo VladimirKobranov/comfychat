@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useNotesStore } from '@/stores/notes'
 
 const SYSTEM_PROMPT = `Ты — ассистент по промпт-инжинирингу для Stable Diffusion ComfyUI.
 
@@ -117,6 +118,10 @@ export const useChatStore = defineStore('chat', () => {
       }
       messages.value.push(assistantMsg)
       saveHistory()
+
+      useNotesStore()
+        .createNote(text)
+        .catch(() => {})
     } catch (e) {
       error.value = (e as Error).message
     } finally {
