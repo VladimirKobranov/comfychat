@@ -1,48 +1,100 @@
-# vue-plain
+# ComfyChat
 
-This template should help get you started developing with Vue 3 in Vite.
+AI image generation with ComfyUI + Prompt Assistant (Qwen via llama.cpp).
 
-## Recommended IDE Setup
+## Prerequisites
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- [Vite+](https://viteplus.dev/) (`vp` CLI — included as dev dependency, used for all commands)
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI) (local instance)
+- [llama.cpp](https://github.com/ggml-org/llama.cpp) + Qwen 2.5 for prompt enhancement
 
-## Recommended Browser Setup
+## Environment
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+```sh
+cp .env.example .env.local
+```
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
+Fill in your Supabase project URL and publishable key.
 
 ## Project Setup
 
 ```sh
-pnpm install
+vp install
 ```
 
-### Compile and Hot-Reload for Development
+### Development
 
 ```sh
-pnpm dev
+vp dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Production Build
 
 ```sh
-pnpm build
+vp build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint, Type Check & Format
 
 ```sh
-pnpm lint
+vp check
+```
+
+## ComfyUI Setup
+
+1. **Clone the repository:**
+
+   ```sh
+   git clone https://github.com/comfyanonymous/ComfyUI.git
+   cd ComfyUI
+   ```
+
+2. **Create and activate a virtual environment:**
+
+   ```sh
+   python -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+
+   ```sh
+   pip install -r requirements.txt
+   ```
+
+4. **Run ComfyUI:**
+
+   ```sh
+   python main.py --enable-cors-header
+   ```
+
+5. **(Optional) Use the launch script:**
+   ```sh
+   ./launch.sh
+   ```
+
+## llama.cpp Setup (Prompt Assistant)
+
+The Prompt Assistant chat uses [llama.cpp](https://github.com/ggml-org/llama.cpp) with [Qwen 2.5 7B Instruct](https://huggingface.co/Qwen/Qwen2.5-7B-Instruct-GGUF) to enhance ComfyUI prompts.
+
+`llama-server` downloads the model automatically via the `-hf` flag — no manual download needed.
+
+```sh
+# Just run the script — it downloads & starts the server in one go
+./llama.sh
+```
+
+The dev server proxies `/api/chat` → `http://127.0.0.1:8080/v1/chat/completions`.
+
+## Running Everything
+
+```sh
+# Terminal 1: ComfyUI
+./comfy.sh
+
+# Terminal 2: llama.cpp
+./llama.sh
+
+# Terminal 3: this project
+vp dev
 ```
