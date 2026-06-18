@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStores } from '@/stores'
 import { useGenerationsStore } from '@/stores/generations'
@@ -10,6 +10,17 @@ import type { Generation } from '@/stores/generations'
 const { auth } = useStores()
 const gensStore = useGenerationsStore()
 const { generations } = storeToRefs(gensStore)
+const loading = ref(false)
+const loaded = ref(false)
+
+watchEffect(async () => {
+  if (auth.isAuthenticated && !loaded.value) {
+    loading.value = true
+    await gensStore.getGenerations()
+    loading.value = false
+    loaded.value = true
+  }
+})
 
 function imageUrl(gen: Generation) {
   if (gen.image_storage_path) return gen.image_storage_path
@@ -27,15 +38,12 @@ function download(url: string) {
   a.download = ''
   a.click()
 }
-
-watchEffect(() => {
-  if (auth.isAuthenticated) gensStore.getGenerations()
-})
 </script>
 
 <template>
   <div class="grid">
-    <template v-if="generations.length">
+    <p v-if="loading">Loading...</p>
+    <template v-else-if="generations.length">
       <div v-for="gen in generations" :key="gen.id" class="card">
         <div class="card-img">
           <img v-if="gen.image_filename" :src="imageUrl(gen)" />

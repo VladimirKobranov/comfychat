@@ -43,40 +43,52 @@ async function saveEdit() {
   editId.value = null
 }
 
-watchEffect(() => {
-  if (auth.isAuthenticated) notesStore.getNotes()
+const loading = ref(false)
+const loaded = ref(false)
+
+watchEffect(async () => {
+  if (auth.isAuthenticated && !loaded.value) {
+    loading.value = true
+    await notesStore.getNotes()
+    loading.value = false
+    loaded.value = true
+  }
 })
 </script>
 
 <template>
   <div>
-    <table v-if="notes.length">
-      <thead>
-        <tr>
-          <th>id</th>
-          <th>created_at</th>
-          <th>content</th>
-          <th>update</th>
-          <th>delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="note in notes" :key="note.id">
-          <td>{{ note.id }}</td>
-          <td>{{ formatDate(note.created_at) }}</td>
-          <td>{{ note.content }}</td>
-          <td>
-            <template v-if="editId === note.id">
-              <input v-model="editContent" />
-              <button @click="saveEdit">save</button>
-              <button @click="editId = null">cancel</button>
-            </template>
-            <button v-else @click="enableEdit(note)">update</button>
-          </td>
-          <td><button @click="deleteRow(note.id)">delete</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <p v-if="loading">Loading...</p>
+    <template v-else-if="notes.length">
+      <table>
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>created_at</th>
+            <th>content</th>
+            <th>update</th>
+            <th>delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="note in notes" :key="note.id">
+            <td>{{ note.id }}</td>
+            <td>{{ formatDate(note.created_at) }}</td>
+            <td>{{ note.content }}</td>
+            <td>
+              <template v-if="editId === note.id">
+                <input v-model="editContent" />
+                <button @click="saveEdit">save</button>
+                <button @click="editId = null">cancel</button>
+              </template>
+              <button v-else @click="enableEdit(note)">update</button>
+            </td>
+            <td><button @click="deleteRow(note.id)">delete</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <p v-else>No notes yet.</p>
   </div>
 
   <div class="form">
