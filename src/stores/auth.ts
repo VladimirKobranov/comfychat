@@ -47,6 +47,12 @@ export const useAuthStore = defineStore('auth', () => {
     if (error) throw error
   }
 
+  async function updateProfile(metadata: Record<string, string>) {
+    const { data: result, error } = await supabase.auth.updateUser({ data: metadata })
+    if (error) throw error
+    if (result.user) syncUser(result.user)
+  }
+
   async function logout() {
     await supabase.auth.signOut()
     authListener?.subscription.unsubscribe()
@@ -56,5 +62,5 @@ export const useAuthStore = defineStore('auth', () => {
     authListener?.subscription.unsubscribe()
   }
 
-  return { user, isAuthenticated, ready, init, login, logout, cleanup }
+  return { user, isAuthenticated, ready, init, login, updateProfile, logout, cleanup }
 })
