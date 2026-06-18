@@ -22,6 +22,7 @@ export interface Generation {
   prompt_id: string | null
   image_filename: string | null
   image_subfolder: string | null
+  image_storage_path: string | null
   error: string | null
 }
 

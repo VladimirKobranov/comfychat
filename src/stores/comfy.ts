@@ -139,6 +139,9 @@ export const useComfyStore = defineStore('comfy', () => {
   }
 
   async function saveSuccess(promptId: string, filename: string, subfolder: string) {
+    const auth = useAuthStore()
+    const userId = auth.user?.id
+
     const { data } = await supabase
       .from('generations')
       .update({
@@ -148,6 +151,33 @@ export const useComfyStore = defineStore('comfy', () => {
       })
       .eq('prompt_id', promptId)
       .select()
+
+    if (userId) {
+      try {
+        const blobRes = await fetch(
+          `${COMFY_HOST}/view?filename=${encodeURIComponent(filename)}&subfolder=${encodeURIComponent(subfolder)}&type=output`,
+        )
+        const blob = await blobRes.blob()
+        const path = `${userId}/${filename}`
+        const { error: uploadError } = await supabase.storage
+          .from('images')
+          .upload(path, blob, { upsert: true })
+        if (!uploadError) {
+          const { data: signed } = await supabase.storage
+            .from('images')
+            .createSignedUrl(path, 60 * 60 * 24 * 365)
+          if (signed?.signedUrl) {
+            await supabase
+              .from('generations')
+              .update({ image_storage_path: signed.signedUrl })
+              .eq('prompt_id', promptId)
+          }
+        }
+      } catch {
+        // fail silently — image_filename already saved, ComfyUI URL works as fallback
+      }
+    }
+
     if (data?.length) {
       const gens = useGenerationsStore()
       const i = gens.generations.findIndex((g) => g.prompt_id === promptId)
