@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { supabase } from '@/utils/supabase'
 import type { User } from '@supabase/supabase-js'
+import router from '@/router'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<Pick<
@@ -43,8 +44,9 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(email: string, password: string) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) throw error
+    if (data.session?.user) syncUser(data.session.user)
   }
 
   async function updateProfile(metadata: Record<string, string>) {
@@ -56,6 +58,7 @@ export const useAuthStore = defineStore('auth', () => {
   async function logout() {
     await supabase.auth.signOut()
     authListener?.subscription.unsubscribe()
+    await router.push('/')
   }
 
   function cleanup() {

@@ -37,8 +37,16 @@ function openImage(url: string) {
 
 <template>
   <div>
-    <textarea v-model="params.positive" placeholder="Positive prompt" rows="3" id="positive" />
-    <textarea v-model="params.negative" placeholder="Negative prompt" rows="2" id="negative" />
+    <div>
+      <label>
+        Positive prompt
+        <textarea v-model="params.positive" placeholder="Positive prompt" rows="10" id="positive" />
+      </label>
+      <label>
+        Negative prompt
+        <textarea v-model="params.negative" placeholder="Negative prompt" rows="10" id="negative" />
+      </label>
+    </div>
 
     <div class="params">
       <label>Steps <input v-model.number="params.steps" type="number" min="1" max="150" /></label>
