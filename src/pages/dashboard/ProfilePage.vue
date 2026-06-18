@@ -1,67 +1,67 @@
 <script setup lang="ts">
-import { ref, reactive } from "vue";
-import { useStores } from "@/stores";
-import { formatDate } from "@/utils/utils";
-import { supabase } from "@/utils/supabase";
+import { ref, reactive } from 'vue'
+import { useStores } from '@/stores'
+import { formatDate } from '@/utils/utils'
+import { supabase } from '@/utils/supabase'
 
-const { auth } = useStores();
+const { auth } = useStores()
 
-const saving = ref(false);
-const done = ref(false);
-const error = ref("");
+const saving = ref(false)
+const done = ref(false)
+const error = ref('')
 
-const showForm = ref(false);
+const showForm = ref(false)
 const fields = reactive({
-  full_name: "",
-  display_name: "",
-  bio: "",
-});
+  full_name: '',
+  display_name: '',
+  bio: '',
+})
 
 function resetFields() {
-  fields.full_name = auth.user?.user_metadata?.full_name ?? "";
-  fields.display_name = auth.user?.user_metadata?.display_name ?? "";
-  fields.bio = auth.user?.user_metadata?.bio ?? "";
+  fields.full_name = auth.user?.user_metadata?.full_name ?? ''
+  fields.display_name = auth.user?.user_metadata?.display_name ?? ''
+  fields.bio = auth.user?.user_metadata?.bio ?? ''
 }
 
 function openForm() {
-  resetFields();
-  showForm.value = true;
+  resetFields()
+  showForm.value = true
 }
 
 function cancelForm() {
-  showForm.value = false;
+  showForm.value = false
 }
 
 async function save() {
-  saving.value = true;
-  done.value = false;
-  error.value = "";
+  saving.value = true
+  done.value = false
+  error.value = ''
   try {
-    await auth.updateProfile(fields);
-    done.value = true;
-    showForm.value = false;
+    await auth.updateProfile(fields)
+    done.value = true
+    showForm.value = false
   } catch (e) {
-    error.value = (e as Error).message;
+    error.value = (e as Error).message
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 
-const showEmailForm = ref(false);
-const newEmail = ref("");
+const showEmailForm = ref(false)
+const newEmail = ref('')
 
 async function changeEmail() {
-  if (!newEmail.value.trim()) return;
-  saving.value = true;
-  error.value = "";
+  if (!newEmail.value.trim()) return
+  saving.value = true
+  error.value = ''
   try {
-    await supabase.auth.updateUser({ email: newEmail.value });
-    done.value = true;
-    showEmailForm.value = false;
+    await supabase.auth.updateUser({ email: newEmail.value })
+    done.value = true
+    showEmailForm.value = false
   } catch (e) {
-    error.value = (e as Error).message;
+    error.value = (e as Error).message
   } finally {
-    saving.value = false;
+    saving.value = false
   }
 }
 </script>
@@ -101,15 +101,15 @@ async function changeEmail() {
       <div v-if="!showForm" class="column">
         <div class="field-row">
           <span class="label">full name</span>
-          <span>{{ auth.user?.user_metadata?.full_name ?? "—" }}</span>
+          <span>{{ auth.user?.user_metadata?.full_name ?? '—' }}</span>
         </div>
         <div class="field-row">
           <span class="label">display name</span>
-          <span>{{ auth.user?.user_metadata?.display_name ?? "—" }}</span>
+          <span>{{ auth.user?.user_metadata?.display_name ?? '—' }}</span>
         </div>
         <div class="field-row">
           <span class="label">bio</span>
-          <span>{{ auth.user?.user_metadata?.bio ?? "—" }}</span>
+          <span>{{ auth.user?.user_metadata?.bio ?? '—' }}</span>
         </div>
         <button @click="openForm">edit</button>
       </div>
@@ -129,7 +129,7 @@ async function changeEmail() {
 </template>
 
 <style scoped lang="scss">
-@use "@/styles/mixins";
+@use '@/styles/mixins';
 
 .page {
   @extend %column-layout;
