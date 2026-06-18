@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useComfyStore } from '@/stores/comfy'
 import { comfyDefaults } from '@/configs/comfy'
 
@@ -16,6 +16,24 @@ const params = reactive({
   seed: null as number | null,
   sampler_name: comfyDefaults.sampler_name,
   scheduler: comfyDefaults.scheduler,
+})
+
+onMounted(() => {
+  const saved = localStorage.getItem('chat_prompts')
+  if (saved) {
+    try {
+      const { positivePrompt, negativePrompt, parameters } = JSON.parse(saved)
+      params.positive = positivePrompt
+      params.negative = negativePrompt
+      if (parameters) {
+        if (parameters.steps) params.steps = parameters.steps
+        if (parameters.cfg) params.cfg = parameters.cfg
+      }
+      localStorage.removeItem('chat_prompts')
+    } catch {
+      /* ignore */
+    }
+  }
 })
 
 function handleGenerate() {

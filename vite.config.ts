@@ -76,6 +76,14 @@ export default defineConfig({
     sortPackageJson: false,
     ignorePatterns: [],
   },
+  server: {
+    proxy: {
+      '/api/chat': {
+        target: 'http://127.0.0.1:8080',
+        rewrite: () => '/v1/chat/completions',
+      },
+    },
+  },
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {

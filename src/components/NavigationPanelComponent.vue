@@ -14,6 +14,7 @@ const handleLogout = () => {
     <ButtonLink to="/" text="Home" />
     <ButtonLink v-if="!auth.isAuthenticated" to="/login" text="Login" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard" text="Dashboard" />
+    <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/chat" text="Chat" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/comfy" text="Comfy" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/generations" text="Generations" />
     <ButtonLink v-if="auth.isAuthenticated" to="/dashboard/profile" text="Profile" />
@@ -28,5 +29,6 @@ const handleLogout = () => {
   @extend %row-layout;
   @extend %gap;
   align-items: center;
+  justify-content: center;
 }
 </style>

@@ -2,6 +2,7 @@ import HomePage from '@/pages/HomePage.vue'
 import LoginPage from '@/pages/LoginPage.vue'
 import ProfilePage from '@/pages/dashboard/ProfilePage.vue'
 import SignupPage from '@/pages/SignupPage.vue'
+import ChatPage from '@/pages/dashboard/ChatPage.vue'
 import ComfyPage from '@/pages/dashboard/ComfyPage.vue'
 import GenerationsPage from '@/pages/dashboard/GenerationsPage.vue'
 import { useAuthStore } from '@/stores/auth'
@@ -28,6 +29,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         { path: 'profile', component: ProfilePage },
+        { path: 'chat', component: ChatPage },
         { path: 'comfy', component: ComfyPage },
         { path: 'generations', component: GenerationsPage },
         { path: '', component: DashboardPage },

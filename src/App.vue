@@ -12,8 +12,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <NavigationPanelComponent />
-  <RouterView />
+  <div class="main">
+    <NavigationPanelComponent />
+    <RouterView />
+  </div>
 </template>
 
 <style lang="scss">
@@ -21,9 +23,14 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   min-height: 100dvh;
 }
 body {
   margin: 0;
+}
+
+.main {
+  margin: 20px;
 }
 </style>
