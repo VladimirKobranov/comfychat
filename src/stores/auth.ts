@@ -7,9 +7,16 @@ import router from '@/router'
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<Pick<
     User,
-    'id' | 'email' | 'user_metadata' | 'app_metadata' | 'created_at' | 'last_sign_in_at'
+    | 'id'
+    | 'email'
+    | 'user_metadata'
+    | 'app_metadata'
+    | 'created_at'
+    | 'last_sign_in_at'
+    | 'email_confirmed_at'
   > | null>(null)
   const ready = ref(false)
+  const isRecoverySession = ref(false)
 
   const isAuthenticated = computed(() => user.value !== null)
 
@@ -23,7 +30,10 @@ export const useAuthStore = defineStore('auth', () => {
     syncUser(session?.user ?? null)
     ready.value = true
 
-    authListener = supabase.auth.onAuthStateChange((_event, session) => {
+    authListener = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        isRecoverySession.value = true
+      }
       syncUser(session?.user ?? null)
     }).data
   }
@@ -37,6 +47,7 @@ export const useAuthStore = defineStore('auth', () => {
         app_metadata: supabaseUser.app_metadata,
         created_at: supabaseUser.created_at,
         last_sign_in_at: supabaseUser.last_sign_in_at,
+        email_confirmed_at: supabaseUser.email_confirmed_at,
       }
     } else {
       user.value = null
@@ -55,7 +66,21 @@ export const useAuthStore = defineStore('auth', () => {
     if (result.user) syncUser(result.user)
   }
 
+  async function resetPassword(email: string) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/update-password`,
+    })
+    if (error) throw error
+  }
+
+  async function updatePassword(password: string) {
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) throw error
+    isRecoverySession.value = false
+  }
+
   async function logout() {
+    isRecoverySession.value = false
     await supabase.auth.signOut()
     authListener?.subscription.unsubscribe()
     await router.push('/')
@@ -65,5 +90,17 @@ export const useAuthStore = defineStore('auth', () => {
     authListener?.subscription.unsubscribe()
   }
 
-  return { user, isAuthenticated, ready, init, login, updateProfile, logout, cleanup }
+  return {
+    user,
+    isAuthenticated,
+    isRecoverySession,
+    ready,
+    init,
+    login,
+    resetPassword,
+    updatePassword,
+    updateProfile,
+    logout,
+    cleanup,
+  }
 })

@@ -6,6 +6,8 @@ import SignupPage from '@/pages/SignupPage.vue'
 import ChatPage from '@/pages/dashboard/ChatPage.vue'
 import ComfyPage from '@/pages/dashboard/ComfyPage.vue'
 import GenerationsPage from '@/pages/dashboard/GenerationsPage.vue'
+import ResetPasswordPage from '@/pages/ResetPasswordPage.vue'
+import UpdatePasswordPage from '@/pages/UpdatePasswordPage.vue'
 import { useAuthStore } from '@/stores/auth'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -23,6 +25,14 @@ const router = createRouter({
     {
       path: '/signup',
       component: SignupPage,
+    },
+    {
+      path: '/auth/reset-password',
+      component: ResetPasswordPage,
+    },
+    {
+      path: '/auth/update-password',
+      component: UpdatePasswordPage,
     },
     {
       path: '/dashboard',

@@ -40,6 +40,9 @@ async function handleLogin() {
     <p v-if="error" class="error">{{ error }}</p>
     <input v-model="data.email" type="email" placeholder="Email" required />
     <input v-model="data.password" type="password" placeholder="Password" required />
+    <div>
+      <RouterLink to="/auth/reset-password">Forgot password?</RouterLink>
+    </div>
     <button :disabled="loading">{{ loading ? 'Logging in...' : 'Login' }}</button>
     <p>Don't have an account? <RouterLink to="/signup">Sign up</RouterLink></p>
   </form>

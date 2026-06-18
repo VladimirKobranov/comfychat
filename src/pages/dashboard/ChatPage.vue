@@ -64,9 +64,11 @@ function copy(text: string) {
           <p v-if="msg.parameters">
             Steps: {{ msg.parameters.steps }} | CFG: {{ msg.parameters.cfg }}
           </p>
-          <button @click="handleApply(msg)">Apply to ComfyUI</button>
-          <button @click="copy(msg.positivePrompt ?? '')">Copy positive</button>
-          <button @click="copy(msg.negativePrompt ?? '')">Copy negative</button>
+          <div class="panel">
+            <button @click="handleApply(msg)">Apply to ComfyUI</button>
+            <button @click="copy(msg.positivePrompt ?? '')">Copy positive</button>
+            <button @click="copy(msg.negativePrompt ?? '')">Copy negative</button>
+          </div>
         </template>
         <hr />
       </div>

@@ -91,6 +91,15 @@ async function changeEmail() {
           <dt>Last login</dt>
           <dd>{{ formatDate(auth.user.last_sign_in_at) }}</dd>
         </div>
+        <div class="field-row">
+          <dt>Email confirmed</dt>
+          <dd>
+            <template v-if="auth.user?.email_confirmed_at">{{
+              formatDate(auth.user.email_confirmed_at)
+            }}</template>
+            <template v-else>no</template>
+          </dd>
+        </div>
       </dl>
       <button v-if="!showEmailForm" @click="showEmailForm = true">change email</button>
       <form v-if="showEmailForm" class="form" @submit.prevent="changeEmail">

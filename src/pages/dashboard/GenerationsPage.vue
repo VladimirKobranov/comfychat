@@ -106,6 +106,7 @@ function download(url: string) {
   @extend %border;
   overflow: hidden;
   min-width: 300px;
+  max-width: 300px;
 }
 .card-img {
   @extend %gap;
