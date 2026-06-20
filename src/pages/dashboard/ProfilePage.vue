@@ -69,127 +69,88 @@ async function changeEmail() {
 <template>
   <div class="page">
     <h2>Account</h2>
-    <div class="card">
-      <dl>
-        <div class="field-row">
-          <dt>ID</dt>
-          <dd>
-            <code>{{ auth.user?.id }}</code>
-          </dd>
-        </div>
-        <div class="field-row">
-          <dt>Email</dt>
-          <dd>{{ auth.user?.email }}</dd>
-        </div>
-      </dl>
-      <dl>
-        <div class="field-row" v-if="auth.user?.created_at">
-          <dt>Registered</dt>
-          <dd>{{ formatDate(auth.user.created_at) }}</dd>
-        </div>
-        <div class="field-row" v-if="auth.user?.last_sign_in_at">
-          <dt>Last login</dt>
-          <dd>{{ formatDate(auth.user.last_sign_in_at) }}</dd>
-        </div>
-        <div class="field-row">
-          <dt>Email confirmed</dt>
-          <dd>
-            <template v-if="auth.user?.email_confirmed_at">{{
-              formatDate(auth.user.email_confirmed_at)
-            }}</template>
-            <template v-else>no</template>
-          </dd>
-        </div>
-      </dl>
-      <button v-if="!showEmailForm" @click="showEmailForm = true">change email</button>
-      <form v-if="showEmailForm" class="form" @submit.prevent="changeEmail">
-        <input v-model="newEmail" type="email" placeholder="new email" />
-        <div class="row">
-          <button type="submit" :disabled="saving">save</button>
-          <button type="button" @click="showEmailForm = false">cancel</button>
-        </div>
-      </form>
-    </div>
+    <table class="info-table">
+      <tr>
+        <td>ID</td>
+        <td>
+          <code>{{ auth.user?.id }}</code>
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>{{ auth.user?.email }}</td>
+      </tr>
+      <tr v-if="auth.user?.created_at">
+        <td>Registered</td>
+        <td>{{ formatDate(auth.user.created_at) }}</td>
+      </tr>
+      <tr v-if="auth.user?.last_sign_in_at">
+        <td>Last login</td>
+        <td>{{ formatDate(auth.user.last_sign_in_at) }}</td>
+      </tr>
+      <tr>
+        <td>Email confirmed</td>
+        <td>
+          {{ auth.user?.email_confirmed_at ? formatDate(auth.user.email_confirmed_at) : "no" }}
+        </td>
+      </tr>
+    </table>
+
+    <template v-if="!showEmailForm">
+      <button @click="showEmailForm = true">change email</button>
+    </template>
+    <form v-else class="form" @submit.prevent="changeEmail">
+      <input v-model="newEmail" type="email" placeholder="new email" />
+      <div class="row">
+        <button type="submit" :disabled="saving">save</button>
+        <button type="button" @click="showEmailForm = false">cancel</button>
+      </div>
+    </form>
 
     <h2>Profile</h2>
-    <div class="card">
-      <template v-if="!showForm">
-        <dl>
-          <div class="field-row">
-            <dt>Full name</dt>
-            <dd>{{ auth.user?.user_metadata?.full_name || "—" }}</dd>
-          </div>
-          <div class="field-row">
-            <dt>Display name</dt>
-            <dd>{{ auth.user?.user_metadata?.display_name || "—" }}</dd>
-          </div>
-          <div class="field-row">
-            <dt>Bio</dt>
-            <dd>{{ auth.user?.user_metadata?.bio || "—" }}</dd>
-          </div>
-        </dl>
-        <button @click="openForm">edit profile</button>
-      </template>
-      <form v-else class="form" @submit.prevent="save">
-        <label>Full name <input v-model="fields.full_name" /></label>
-        <label>Display name <input v-model="fields.display_name" /></label>
-        <label>Bio <textarea v-model="fields.bio" rows="3" /></label>
-        <div class="row">
-          <button type="submit" :disabled="saving">save</button>
-          <button type="button" @click="cancelForm">cancel</button>
-        </div>
-        <p v-if="done">saved</p>
-        <p v-if="error" class="error">{{ error }}</p>
-      </form>
-    </div>
+    <template v-if="!showForm">
+      <table class="info-table">
+        <tr>
+          <td>Full name</td>
+          <td>{{ auth.user?.user_metadata?.full_name || "—" }}</td>
+        </tr>
+        <tr>
+          <td>Display name</td>
+          <td>{{ auth.user?.user_metadata?.display_name || "—" }}</td>
+        </tr>
+        <tr>
+          <td>Bio</td>
+          <td>{{ auth.user?.user_metadata?.bio || "—" }}</td>
+        </tr>
+      </table>
+      <button @click="openForm">edit profile</button>
+    </template>
+    <form v-else class="form" @submit.prevent="save">
+      <label>Full name <input v-model="fields.full_name" /></label>
+      <label>Display name <input v-model="fields.display_name" /></label>
+      <label>Bio <textarea v-model="fields.bio" rows="3" /></label>
+      <div class="row">
+        <button type="submit" :disabled="saving">save</button>
+        <button type="button" @click="cancelForm">cancel</button>
+      </div>
+      <p v-if="done">saved</p>
+      <p v-if="error" class="error">{{ error }}</p>
+    </form>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 @use "@/styles/mixins";
 
-.page {
-  @extend %column-layout, %center;
-  @extend %gap;
-  max-width: 480px;
-}
-
-.card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.field-row {
-  @extend %row-layout;
-  @extend %gap;
-  align-items: baseline;
-}
-
-dl {
+.info-table {
   width: 100%;
-}
+  text-align: left;
 
-dt {
-  min-width: 100px;
-  text-align: justify;
-}
-
-dd {
-  word-break: break-all;
-}
-
-.form {
-  @extend %column-layout;
-  width: 100%;
-
-  label {
-    @extend %column-layout;
+  td:last-child {
+    text-align: end;
   }
 }
-
 .row {
-  @extend %row-layout;
-  @extend %gap;
+  @extend %row-layout, %gap;
 }
 </style>

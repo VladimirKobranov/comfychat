@@ -4,6 +4,11 @@
   margin: 0;
 }
 
-.form {
+.page {
   @extend %gap, %column-layout, %center;
+}
+
+.form {
+  @extend %gap, %column-layout;
+  min-width: 200px;
 }

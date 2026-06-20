@@ -40,26 +40,28 @@ async function handleSignup() {
 </script>
 
 <template>
-  <form v-if="!success" class="form" @submit.prevent="handleSignup">
-    <h4>Sign up</h4>
-    <p v-if="error" class="error">{{ error }}</p>
-    <input v-model="data.email" type="email" placeholder="Email" required />
-    <input v-model="data.password" type="password" placeholder="Password" required />
-    <input v-model="data.confirm" type="password" placeholder="Confirm password" required />
-    <button :disabled="loading">{{ loading ? "Signing up..." : "Sign up" }}</button>
-    <p>
-      Already have an account?
-      <RouterLink to="/login">Log in</RouterLink>
-    </p>
-  </form>
+  <div class="page">
+    <form v-if="!success" class="form" @submit.prevent="handleSignup">
+      <h4>Sign up</h4>
+      <p v-if="error" class="error">{{ error }}</p>
+      <input v-model="data.email" type="email" placeholder="Email" required />
+      <input v-model="data.password" type="password" placeholder="Password" required />
+      <input v-model="data.confirm" type="password" placeholder="Confirm password" required />
+      <button :disabled="loading">{{ loading ? "Signing up..." : "Sign up" }}</button>
+      <p>
+        Already have an account?
+        <RouterLink to="/login">Log in</RouterLink>
+      </p>
+    </form>
 
-  <div v-else class="form">
-    <h4>Check your email</h4>
-    <p>
-      We sent a confirmation link to <strong>{{ data.email }}</strong
-      >.
-    </p>
-    <RouterLink to="/login">Go to login</RouterLink>
+    <div v-else class="form">
+      <h4>Check your email</h4>
+      <p>
+        We sent a confirmation link to <strong>{{ data.email }}</strong
+        >.
+      </p>
+      <RouterLink to="/login">Go to login</RouterLink>
+    </div>
   </div>
 </template>
 
