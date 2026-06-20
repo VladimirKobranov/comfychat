@@ -29,10 +29,13 @@ function copy(text: string) {
 </script>
 
 <template>
-  <div>
-    <h2>Prompt Assistant</h2>
-    <button @click="chat.clearHistory">Clear history</button>
-    <hr />
+  <div class="page">
+    <div class="header-panel">
+      <h2>Prompt Assistant</h2>
+      <div class="toolbar-buttons">
+        <button @click="chat.clearHistory">Clear history</button>
+      </div>
+    </div>
 
     <div>
       <div v-for="msg in chat.messages" :key="msg.id">

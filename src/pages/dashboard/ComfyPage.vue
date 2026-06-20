@@ -54,7 +54,12 @@ function openImage(url: string) {
 </script>
 
 <template>
-  <div>
+  <div class="page">
+    <div class="header-panel">
+      <h2>Comfy</h2>
+      <div class="toolbar-buttons"><kbd>nonui</kbd></div>
+    </div>
+
     <div>
       <label>
         Positive prompt

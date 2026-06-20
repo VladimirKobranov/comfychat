@@ -67,13 +67,17 @@ async function saveEdit() {
 </script>
 
 <template>
-  <div>
+  <div class="page">
     <p v-if="loading">Loading...</p>
     <template v-else>
-      <div class="toolbar">
-        <button v-if="!isForm" @click="enableForm">+ New Note</button>
-        <p v-if="!sortedNotes.length && !isForm">No notes yet.</p>
+      <div class="header-panel">
+        <h2>Notes</h2>
+        <div class="toolbar-buttons">
+          <button v-if="!isForm" @click="enableForm">+ New Note</button>
+          <p v-if="!sortedNotes.length && !isForm">No notes yet.</p>
+        </div>
       </div>
+
       <div class="grid">
         <div v-if="isForm" class="card">
           <div class="card-body">
