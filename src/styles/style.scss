@@ -1,4 +1,9 @@
+@use "@/styles/mixins";
 .error {
   color: #e00;
   margin: 0;
+}
+
+.form {
+  @extend %gap, %column-layout, %center;
 }

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import '@/styles/style.scss'
-import { onMounted } from 'vue'
-import { useStores } from '@/stores'
-import NavigationPanelComponent from './components/NavigationPanelComponent.vue'
+import "@/styles/style.scss";
+import { onMounted } from "vue";
+import { useStores } from "@/stores";
+import NavigationPanelComponent from "./components/NavigationPanelComponent.vue";
 
-const { app, auth } = useStores()
+const { app, auth } = useStores();
 
 onMounted(() => {
-  app.init()
-  auth.init()
-})
+  app.init();
+  auth.init();
+});
 </script>
 
 <template>
@@ -20,18 +20,23 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
 #app {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-  min-height: 100dvh;
-}
-body {
-  margin: 0;
+  height: 100dvh;
 }
 
 .main {
   margin: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 </style>

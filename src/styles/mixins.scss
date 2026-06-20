@@ -19,3 +19,11 @@
   flex-wrap: nowrap;
   flex-direction: row;
 }
+
+%center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+}
