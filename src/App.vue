@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import "@/styles/style.scss";
-import { onMounted } from "vue";
-import { useStores } from "@/stores";
-import NavigationPanelComponent from "./components/NavigationPanelComponent.vue";
+import '@/styles/style.scss'
+import { onMounted } from 'vue'
+import { useStores } from '@/stores'
+import NavigationPanelComponent from './components/NavigationPanelComponent.vue'
 
-const { app, auth } = useStores();
+const { app, auth } = useStores()
 
 onMounted(() => {
-  app.init();
-  auth.init();
-});
+  app.init()
+  auth.init()
+})
 </script>
 
 <template>

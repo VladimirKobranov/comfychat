@@ -1,42 +1,42 @@
 <script setup lang="ts">
-import { ref, watchEffect } from "vue";
-import { storeToRefs } from "pinia";
-import { useStores } from "@/stores";
-import { useGenerationsStore } from "@/stores/generations";
-import { formatDate } from "@/utils/utils";
+import { ref, watchEffect } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useStores } from '@/stores'
+import { useGenerationsStore } from '@/stores/generations'
+import { formatDate } from '@/utils/utils'
 
-import type { Generation } from "@/stores/generations";
+import type { Generation } from '@/stores/generations'
 
-const { auth } = useStores();
-const gensStore = useGenerationsStore();
-const { generations } = storeToRefs(gensStore);
-const loading = ref(false);
-const loaded = ref(false);
+const { auth } = useStores()
+const gensStore = useGenerationsStore()
+const { generations } = storeToRefs(gensStore)
+const loading = ref(false)
+const loaded = ref(false)
 
 watchEffect(async () => {
   if (auth.isAuthenticated && !loaded.value) {
-    loading.value = true;
-    await gensStore.getGenerations();
-    loading.value = false;
-    loaded.value = true;
+    loading.value = true
+    await gensStore.getGenerations()
+    loading.value = false
+    loaded.value = true
   }
-});
+})
 
 function imageUrl(gen: Generation) {
-  if (gen.image_storage_path) return gen.image_storage_path;
-  if (!gen.image_filename) return "";
-  return `http://127.0.0.1:8188/view?filename=${encodeURIComponent(gen.image_filename)}&subfolder=${encodeURIComponent(gen.image_subfolder ?? "")}&type=output`;
+  if (gen.image_storage_path) return gen.image_storage_path
+  if (!gen.image_filename) return ''
+  return `http://127.0.0.1:8188/view?filename=${encodeURIComponent(gen.image_filename)}&subfolder=${encodeURIComponent(gen.image_subfolder ?? '')}&type=output`
 }
 
 function openImage(url: string) {
-  window.open(url, "_blank");
+  window.open(url, '_blank')
 }
 
 function download(url: string) {
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "";
-  a.click();
+  const a = document.createElement('a')
+  a.href = url
+  a.download = ''
+  a.click()
 }
 </script>
 
@@ -95,7 +95,7 @@ function download(url: string) {
 </template>
 
 <style scoped lang="scss">
-@use "@/styles/mixins";
+@use '@/styles/mixins';
 
 .grid {
   display: grid;
