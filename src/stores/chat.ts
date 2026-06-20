@@ -46,6 +46,17 @@ export const useChatStore = defineStore('chat', () => {
   const messages = ref<ChatMessage[]>([])
   const loading = ref(false)
   const error = ref('')
+  let errorTimer: ReturnType<typeof setTimeout> | null = null
+
+  function setError(msg: string) {
+    if (errorTimer) clearTimeout(errorTimer)
+    error.value = msg
+    if (msg) {
+      errorTimer = setTimeout(() => {
+        error.value = ''
+      }, 5000)
+    }
+  }
 
   function loadHistory() {
     const saved = localStorage.getItem(HISTORY_KEY)
@@ -69,7 +80,7 @@ export const useChatStore = defineStore('chat', () => {
     saveHistory()
 
     loading.value = true
-    error.value = ''
+    setError('')
 
     try {
       const res = await fetch('/api/chat', {
@@ -123,7 +134,7 @@ export const useChatStore = defineStore('chat', () => {
         .createNote(text)
         .catch(() => {})
     } catch (e) {
-      error.value = (e as Error).message
+      setError((e as Error).message)
     } finally {
       loading.value = false
     }
@@ -145,5 +156,5 @@ export const useChatStore = defineStore('chat', () => {
     localStorage.removeItem(HISTORY_KEY)
   }
 
-  return { messages, loading, error, send, applyPrompts, loadHistory, clearHistory }
+  return { messages, loading, error, send, applyPrompts, loadHistory, clearHistory, setError }
 })

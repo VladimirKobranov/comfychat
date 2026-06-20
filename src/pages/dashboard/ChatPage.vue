@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatStore, type ChatMessage } from '@/stores/chat'
 
 const chat = useChatStore()
 const router = useRouter()
 const input = ref('')
+
+const reversedMessages = computed(() => [...chat.messages].reverse())
 
 onMounted(() => {
   chat.loadHistory()
@@ -19,8 +21,14 @@ function handleSend() {
 }
 
 function handleApply(msg: ChatMessage) {
-  chat.applyPrompts(msg)
-  router.push('/dashboard/comfy')
+  chat.setError('')
+  try {
+    chat.applyPrompts(msg)
+    router.push('/dashboard/comfy')
+  } catch (e) {
+    chat.setError((e as Error).message)
+    input.value = ''
+  }
 }
 
 function copy(text: string) {
@@ -37,8 +45,24 @@ function copy(text: string) {
       </div>
     </div>
 
+    <form @submit.prevent="handleSend" class="form">
+      <textarea
+        v-model="input"
+        placeholder="Describe what you want to generate..."
+        rows="6"
+        :disabled="chat.loading"
+        class="full-width"
+      ></textarea>
+      <br />
+      <button type="submit" :disabled="chat.loading || !input.trim()">
+        {{ chat.loading ? 'Thinking...' : 'Send' }}
+      </button>
+    </form>
+
+    <p v-if="chat.error" class="error">{{ chat.error }}</p>
+
     <div>
-      <div v-for="msg in chat.messages" :key="msg.id">
+      <div v-for="msg in reversedMessages" :key="msg.id">
         <p v-if="msg.role === 'user'">
           <strong>You:</strong>
         </p>
@@ -76,22 +100,6 @@ function copy(text: string) {
         <hr />
       </div>
     </div>
-
-    <p v-if="chat.error" class="error">{{ chat.error }}</p>
-
-    <form @submit.prevent="handleSend">
-      <textarea
-        v-model="input"
-        placeholder="Describe what you want to generate..."
-        rows="4"
-        :disabled="chat.loading"
-        class="full-width"
-      ></textarea>
-      <br />
-      <button type="submit" :disabled="chat.loading || !input.trim()">
-        {{ chat.loading ? 'Thinking...' : 'Send' }}
-      </button>
-    </form>
   </div>
 </template>
 
@@ -107,6 +115,9 @@ function copy(text: string) {
 
 .full-width {
   width: 100%;
-  box-sizing: border-box;
+  // box-sizing: border-box;
+}
+.form {
+  width: 100%;
 }
 </style>

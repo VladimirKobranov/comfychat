@@ -1,4 +1,4 @@
-@use '@/styles/mixins';
+@use "@/styles/mixins";
 .error {
   color: #e00;
   margin: 0;
@@ -30,6 +30,7 @@
 }
 
 kbd {
+  @extend %non-select;
   background-color: #eeeeee;
   border-radius: 3px;
   border: 1px solid #b4b4b4;
@@ -43,4 +44,23 @@ kbd {
   line-height: 1;
   padding: 2px 4px;
   white-space: nowrap;
+}
+
+button {
+  cursor: pointer;
+  @extend %non-select;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @extend %non-select;
+}
+
+summary {
+  width: 100%;
+  font-weight: bold;
 }
