@@ -106,8 +106,4 @@ function copy(text: string) {
   width: 100%;
   box-sizing: border-box;
 }
-
-.error {
-  color: red;
-}
 </style>

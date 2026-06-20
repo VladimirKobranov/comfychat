@@ -211,8 +211,4 @@ dd {
   @extend %row-layout;
   @extend %gap;
 }
-
-.error {
-  color: #e00;
-}
 </style>

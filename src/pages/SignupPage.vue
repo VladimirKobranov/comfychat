@@ -34,6 +34,7 @@ async function handleSignup() {
     error.value = (e as { message?: string }).message ?? 'Signup failed'
   } finally {
     loading.value = false
+    router.push('/dashboard')
   }
 }
 </script>
@@ -67,10 +68,5 @@ async function handleSignup() {
 
 .form {
   @extend %gap, %column-layout;
-}
-
-.error {
-  color: #e00;
-  margin: 0;
 }
 </style>

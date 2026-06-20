@@ -54,9 +54,4 @@ async function handleLogin() {
 .form {
   @extend %gap, %column-layout;
 }
-
-.error {
-  color: #e00;
-  margin: 0;
-}
 </style>

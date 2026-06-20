@@ -133,9 +133,6 @@ function openImage(url: string) {
 </template>
 
 <style lang="scss" scoped>
-.error {
-  color: #e00;
-}
 textarea {
   display: flex;
   min-width: 400px;

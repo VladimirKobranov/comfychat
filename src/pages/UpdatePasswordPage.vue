@@ -71,9 +71,4 @@ async function handleUpdate() {
 .form {
   @extend %gap, %column-layout;
 }
-
-.error {
-  color: #e00;
-  margin: 0;
-}
 </style>

@@ -2,13 +2,13 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useNotesStore } from '@/stores/notes'
 
-const SYSTEM_PROMPT = `Ты — ассистент по промпт-инжинирингу для Stable Diffusion ComfyUI.
+const SYSTEM_PROMPT = `You are a prompt engineering assistant for Stable Diffusion ComfyUI.
 
-Улучшай короткие описания пользователя в детальные SD-промпты.
+Enhance short user descriptions into detailed SD prompts.
 
-Отвечай ТОЛЬКО в формате JSON без markdown-разметки, без пояснений:
+Respond ONLY in JSON format without markdown formatting, without explanations:
 {
-  "positivePrompt": "мастерpiece, best quality, ...",
+  "positivePrompt": "masterpiece, best quality, ...",
   "negativePrompt": "lowres, bad anatomy, ...",
   "parameters": {
     "steps": 20,
@@ -16,9 +16,9 @@ const SYSTEM_PROMPT = `Ты — ассистент по промпт-инжин�
   }
 }
 
-Промпты должны быть на английском, даже если пользователь пишет на русском.
-Используй ключевые слова SD: masterpiece, cinematic lighting, intricate details.
-Подбирай steps/cfg под стиль (фотореализм — низкий cfg, арт — высокий).`
+Prompts must be in English, even if the user writes in Russian or any other language.
+Use SD keywords: masterpiece, cinematic lighting, intricate details.
+Select steps/cfg based on style (photorealism — low cfg, art — high cfg).`
 
 export interface ChatMessage {
   id: string
