@@ -106,16 +106,22 @@ function copy(text: string) {
 <style lang="scss" scoped>
 @use '@/styles/mixins';
 
+.prompt-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .prompt-textarea {
-  display: flex;
-  min-width: 400px;
+  // min-width: 400px;
+  // max-width: 100%;
   width: 100%;
-  margin: 6px;
+  box-sizing: border-box;
+  display: flex;
 }
 
 .full-width {
   width: 100%;
-  // box-sizing: border-box;
+  box-sizing: border-box;
 }
 .form {
   width: 100%;
