@@ -1,11 +1,11 @@
-@use '@/styles/mixins';
+@use "@/styles/mixins";
 .error {
   color: #e00;
   margin: 0;
 }
 
 .page {
-  @extend %gap, %column-layout, %center;
+  @extend %gap, %column-layout, %center, %container;
 }
 
 .form {
@@ -63,4 +63,15 @@ h6 {
 summary {
   width: 100%;
   font-weight: bold;
+}
+:root {
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+}
+
+.main {
+  max-width: 900px;
+  margin-inline: auto;
+  padding-inline: 16px;
 }
