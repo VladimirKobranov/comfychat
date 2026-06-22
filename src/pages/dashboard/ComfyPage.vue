@@ -120,7 +120,7 @@ function openImage(url: string) {
       </button>
     </div>
 
-    <p v-if="comfy.status === 'queued' || comfy.status === 'generating'">
+    <p v-if="comfy.status === 'queued' || comfy.status === 'generating'" class="progress-text">
       Progress: {{ comfy.progress }}%
     </p>
 
@@ -146,10 +146,21 @@ textarea {
   padding: 0;
   margin: 0;
 }
+.result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 img {
   max-width: 512px;
   margin-top: 12px;
 }
+
+.progress-text {
+  text-align: center;
+}
+
 .actions {
   width: auto;
   display: flex;

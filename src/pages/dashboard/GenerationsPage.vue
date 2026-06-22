@@ -99,7 +99,7 @@ function download(url: string) {
           </div>
         </div>
       </template>
-      <p v-else>No generations yet.</p>
+      <p v-else class="loading">No generations yet.</p>
     </template>
   </div>
 </template>
