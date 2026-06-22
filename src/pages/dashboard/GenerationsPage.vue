@@ -42,7 +42,7 @@ function download(url: string) {
 
 <template>
   <div class="page">
-    <p v-if="loading">Loading...</p>
+    <p v-if="loading" class="loading">Loading...</p>
     <template v-else>
       <div class="header-panel">
         <h2>Generations</h2>

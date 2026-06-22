@@ -11,9 +11,17 @@
   margin: 0;
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
 .page {
   @extend %column-layout, %container;
   @extend %gap;
+  flex: 1;
 }
 
 .page-center {
