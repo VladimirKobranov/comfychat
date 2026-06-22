@@ -70,30 +70,32 @@ async function changeEmail() {
   <div class="page">
     <h2>Account</h2>
     <table class="info-table">
-      <tr>
-        <td>ID</td>
-        <td>
-          <code>{{ auth.user?.id }}</code>
-        </td>
-      </tr>
-      <tr>
-        <td>Email</td>
-        <td>{{ auth.user?.email }}</td>
-      </tr>
-      <tr v-if="auth.user?.created_at">
-        <td>Registered</td>
-        <td>{{ formatDate(auth.user.created_at) }}</td>
-      </tr>
-      <tr v-if="auth.user?.last_sign_in_at">
-        <td>Last login</td>
-        <td>{{ formatDate(auth.user.last_sign_in_at) }}</td>
-      </tr>
-      <tr>
-        <td>Email confirmed</td>
-        <td>
-          {{ auth.user?.email_confirmed_at ? formatDate(auth.user.email_confirmed_at) : 'no' }}
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>ID</td>
+          <td>
+            <code>{{ auth.user?.id }}</code>
+          </td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{ auth.user?.email }}</td>
+        </tr>
+        <tr v-if="auth.user?.created_at">
+          <td>Registered</td>
+          <td>{{ formatDate(auth.user.created_at) }}</td>
+        </tr>
+        <tr v-if="auth.user?.last_sign_in_at">
+          <td>Last login</td>
+          <td>{{ formatDate(auth.user.last_sign_in_at) }}</td>
+        </tr>
+        <tr>
+          <td>Email confirmed</td>
+          <td>
+            {{ auth.user?.email_confirmed_at ? formatDate(auth.user.email_confirmed_at) : 'no' }}
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     <template v-if="!showEmailForm">
@@ -101,10 +103,12 @@ async function changeEmail() {
     </template>
     <form v-else class="form profile-form" @submit.prevent="changeEmail">
       <table class="info-table">
-        <tr>
-          <td><label>Email</label></td>
-          <td><input v-model="newEmail" type="email" placeholder="new email" /></td>
-        </tr>
+        <tbody>
+          <tr>
+            <td><label>Email</label></td>
+            <td><input v-model="newEmail" type="email" placeholder="new email" /></td>
+          </tr>
+        </tbody>
       </table>
       <div class="row">
         <button type="submit" :disabled="saving">save</button>
@@ -115,35 +119,39 @@ async function changeEmail() {
     <h2>Profile</h2>
     <template v-if="!showForm">
       <table class="info-table">
-        <tr>
-          <td>Full name</td>
-          <td>{{ auth.user?.user_metadata?.full_name || '—' }}</td>
-        </tr>
-        <tr>
-          <td>Display name</td>
-          <td>{{ auth.user?.user_metadata?.display_name || '—' }}</td>
-        </tr>
-        <tr>
-          <td>Bio</td>
-          <td>{{ auth.user?.user_metadata?.bio || '—' }}</td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>Full name</td>
+            <td>{{ auth.user?.user_metadata?.full_name || '—' }}</td>
+          </tr>
+          <tr>
+            <td>Display name</td>
+            <td>{{ auth.user?.user_metadata?.display_name || '—' }}</td>
+          </tr>
+          <tr>
+            <td>Bio</td>
+            <td>{{ auth.user?.user_metadata?.bio || '—' }}</td>
+          </tr>
+        </tbody>
       </table>
       <button @click="openForm">edit profile</button>
     </template>
     <form v-else class="form profile-form" @submit.prevent="save">
       <table class="info-table">
-        <tr>
-          <td><label>Full name</label></td>
-          <td><input v-model="fields.full_name" /></td>
-        </tr>
-        <tr>
-          <td><label>Display name</label></td>
-          <td><input v-model="fields.display_name" /></td>
-        </tr>
-        <tr>
-          <td><label>Bio</label></td>
-          <td><textarea v-model="fields.bio" rows="3" /></td>
-        </tr>
+        <tbody>
+          <tr>
+            <td><label>Full name</label></td>
+            <td><input v-model="fields.full_name" /></td>
+          </tr>
+          <tr>
+            <td><label>Display name</label></td>
+            <td><input v-model="fields.display_name" /></td>
+          </tr>
+          <tr>
+            <td><label>Bio</label></td>
+            <td><textarea v-model="fields.bio" rows="3" /></td>
+          </tr>
+        </tbody>
       </table>
       <div class="row">
         <button type="submit" :disabled="saving">save</button>
