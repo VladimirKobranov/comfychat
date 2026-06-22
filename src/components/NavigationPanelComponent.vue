@@ -31,5 +31,6 @@ const handleLogout = () => {
   @extend %gap;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 </style>

@@ -49,7 +49,7 @@ async function handleUpdate() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page page-center">
     <form v-if="!done" class="form" @submit.prevent="handleUpdate">
       <h4>Set new password</h4>
       <p v-if="error" class="error">{{ error }}</p>

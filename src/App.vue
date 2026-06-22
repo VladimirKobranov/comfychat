@@ -34,7 +34,7 @@ body {
 }
 
 .main {
-  margin: 20px;
+  margin-block: 20px;
   flex: 1;
   display: flex;
   flex-direction: column;

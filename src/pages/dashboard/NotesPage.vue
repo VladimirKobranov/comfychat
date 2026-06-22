@@ -143,16 +143,14 @@ async function saveEdit() {
 
 .grid {
   display: grid;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   @extend %gap;
 }
 
 .card {
   @extend %border, %column-layout;
   overflow: hidden;
-  min-width: 200px;
   min-height: 200px;
-  max-width: 200px;
 }
 
 .card-body {

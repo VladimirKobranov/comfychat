@@ -1,15 +1,28 @@
 @use '@/styles/mixins';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .error {
   color: #e00;
   margin: 0;
 }
 
 .page {
-  @extend %gap, %column-layout, %center, %container;
+  @extend %column-layout, %container;
+  @extend %gap;
+}
+
+.page-center {
+  @extend %center;
 }
 
 .form {
-  @extend %gap, %column-layout;
+  @extend %column-layout;
+  @extend %gap;
   min-width: 200px;
 }
 
@@ -71,7 +84,5 @@ summary {
 }
 
 .main {
-  max-width: 900px;
-  margin-inline: auto;
-  padding-inline: 16px;
+  @extend %container;
 }

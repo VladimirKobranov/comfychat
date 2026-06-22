@@ -109,14 +109,12 @@ function download(url: string) {
 
 .grid {
   display: grid;
-  grid-template-columns: auto auto auto;
-  @extend %gap;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 6px;
 }
 .card {
   @extend %border;
   overflow: hidden;
-  min-width: 300px;
-  max-width: 300px;
 }
 .card-img {
   @extend %gap;

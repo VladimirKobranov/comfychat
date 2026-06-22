@@ -187,4 +187,8 @@ async function changeEmail() {
   width: 100%;
   align-items: center;
 }
+
+.page > button {
+  align-self: flex-start;
+}
 </style>

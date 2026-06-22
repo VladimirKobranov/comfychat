@@ -40,7 +40,7 @@ async function handleSignup() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page page-center">
     <form v-if="!success" class="form" @submit.prevent="handleSignup">
       <h4>Sign up</h4>
       <p v-if="error" class="error">{{ error }}</p>

@@ -140,9 +140,11 @@ function openImage(url: string) {
 <style lang="scss" scoped>
 textarea {
   display: flex;
-  min-width: 400px;
+  // min-width: 400px;
   width: 100%;
-  margin: 6px;
+  // margin: 6px;
+  padding: 0;
+  margin: 0;
 }
 img {
   max-width: 512px;

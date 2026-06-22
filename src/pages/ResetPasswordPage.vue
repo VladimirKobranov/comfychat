@@ -23,7 +23,7 @@ async function handleReset() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page page-center">
     <form v-if="!sent" class="form" @submit.prevent="handleReset">
       <h4>Reset password</h4>
       <p v-if="error" class="error">{{ error }}</p>

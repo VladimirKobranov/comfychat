@@ -35,7 +35,7 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page page-center">
     <form class="form" @submit.prevent="handleLogin">
       <h4>Sign in</h4>
       <p v-if="error" class="error">{{ error }}</p>
