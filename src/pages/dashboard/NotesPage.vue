@@ -158,6 +158,10 @@ async function saveEdit() {
   @extend %gap;
   flex: 1;
   justify-content: center;
+
+  textarea {
+    flex: 1 1 auto;
+  }
 }
 
 .card-date {
